@@ -1,13 +1,12 @@
 html,body {
     max-width: 100%;
     max-height: 100%;
-    overflow: hidden;
-    background: url('../Images/background.jpg')
+    background: url('../Images/background.jpg');
 }
 
 .checkout {
     box-shadow: 3px 7px 15px grey;
-    margin: 5%;
+    margin: 40px 100px;
     box-sizing: border-box;
     background-color: white;
 }
@@ -45,6 +44,7 @@ div.co-menu ul li+li::before {
 
 div#breadcrum {
     flex: 3;
+    white-space: nowrap;
 }
 
 div.co-content {
@@ -152,8 +152,8 @@ button {
 }
 
 .co-cb__ImageContainer {
-    height: auto;
-    width: 9%;
+    height: 50px;
+    width: 50px;
     padding: 2%;
     background-color: #d9d9d9;
 }
@@ -188,6 +188,7 @@ button {
     color : grey;
     font-size: 12px;
     margin-left: 2%;
+    white-space: nowrap;
 }
 
 .co-cb__desc--bold {
@@ -210,4 +211,51 @@ button {
 
 .card--active {
     border: 1px solid #d9d9d9;
+}
+
+@media only screen and (max-width: 992px) {
+    .checkout {
+        margin: 40px 20px;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+    div.co-paymentBlock {
+        flex: 1;
+    }
+    
+    div.co-cartBlock {
+        flex: 1;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        overflow: visible;
+    }
+
+    .co-menu {
+        font-size: 10px;
+    }
+
+    .co-content {
+        flex-direction: column;
+    }
+
+    .co-paymentBlock {
+        order: 2
+    }
+
+    .co-cartBlock {
+        order: 1;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .co-menu {
+        font-size: 8px;
+    }
+    .wallet-images  ul {
+        flex-direction: column;
+    }
 }
