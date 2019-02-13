@@ -1,0 +1,62 @@
+body {
+    margin: 5%;
+}
+
+.container {
+    box-shadow: 3px 7px 15px grey;
+}
+
+div.menu {
+    display: flex;
+    padding: 10px;
+    font-weight: bold;
+    border: 1px solid #d9d9d9;
+}
+
+div.menu > * {
+    flex: 1;
+}
+
+div ul {
+    display: flex;
+    font-weight: 100;
+    color: grey;
+}
+
+.bread-crum--active {
+    font-weight: bold;
+    color: black;
+}
+
+.content-right {
+    text-align: end;
+}
+
+div.menu ul li::after {
+    content: " /";
+    color: grey;
+}
+
+div.menu ul li:last-child::after {
+    content: "";
+}
+
+div#bread-crum {
+    flex: 3;
+}
+
+div.row {
+    display: flex;
+    border: 1px solid #d9d9d9;
+}
+
+div#paymentBlock {
+    padding: 10px;    
+    flex: 3;
+}
+
+div#cartBlock {
+    padding: 10px;
+    flex: 2;
+    background-color: #f2f2f2;
+}
