@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import style from './style';
 
-const DropDown = (props) => {
+const SelectField = (props) => {
   const {
     onchange,
     value,
@@ -27,7 +27,7 @@ const DropDown = (props) => {
   );
 };
 
-DropDown.propTypes = {
+SelectField.propTypes = {
   options: PropTypes.arrayOf(PropTypes.objectOf),
   value: PropTypes.string,
   onchange: PropTypes.func,
@@ -35,7 +35,7 @@ DropDown.propTypes = {
   defaultText: PropTypes.string,
 };
 
-DropDown.defaultProps = {
+SelectField.defaultProps = {
   options: [{ id: 0, value: 'select' }],
   onchange: () => {},
   value: '',
@@ -43,4 +43,4 @@ DropDown.defaultProps = {
   defaultText: 'Select',
 };
 
-export default DropDown;
+export default SelectField;

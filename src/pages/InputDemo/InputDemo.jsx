@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextField, DropDown, RadioGroup } from '../../components';
+import { TextField, SelectField, RadioGroup } from '../../components';
 import {
   cricketOptions,
   footBallOptions,
@@ -48,7 +48,7 @@ class InputDemo extends Component {
         <h3>Name</h3>
         <TextField value={value} onchange={this.handleNameChange} />
         <h3>Select the game you play</h3>
-        <DropDown value={sport} onchange={this.handleSportsChange} options={sportsArray} />
+        <SelectField value={sport} onchange={this.handleSportsChange} options={sportsArray} />
         { sport
           ? (
             <div>
