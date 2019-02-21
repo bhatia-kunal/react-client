@@ -1,10 +1,11 @@
 const style = {
   base: {
-    width: '95%',
-    margin: '5px',
-    padding: '7px',
-    border: '1px solid',
-    borderRadius: '5px',
+    display: 'inline-flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+  },
+  pointer: {
+    cursor: 'pointer',
   },
   error: {
     borderColor: 'red',

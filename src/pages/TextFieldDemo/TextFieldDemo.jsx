@@ -13,7 +13,7 @@ const bannerImages = [
 
 const TextFieldDemo = () => (
   <>
-    <Slider banners={bannerImages} random />
+    <Slider random banners={bannerImages} />
     <h5>This is a Disabled Input</h5>
     <TextField disabled value="Disabled Input" />
     <h5>A Valid Input</h5>
