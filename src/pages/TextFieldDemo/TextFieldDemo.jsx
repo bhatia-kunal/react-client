@@ -1,8 +1,19 @@
 import React from 'react';
-import TextField from '../../components';
+import { TextField, Slider } from '../../components';
+import { PUBLIC_IMAGE__FOLDER } from '../../configs/constants';
+
+const bannerImages = [
+  `${PUBLIC_IMAGE__FOLDER}default.png`,
+  `${PUBLIC_IMAGE__FOLDER}cloud.jpg`,
+  `${PUBLIC_IMAGE__FOLDER}dns-server.png`,
+  `${PUBLIC_IMAGE__FOLDER}full-stack-web-development.jpg`,
+  `${PUBLIC_IMAGE__FOLDER}js.jpg`,
+  `${PUBLIC_IMAGE__FOLDER}load-balancer.png`,
+];
 
 const TextFieldDemo = () => (
   <>
+    <Slider banners={bannerImages} random />
     <h5>This is a Disabled Input</h5>
     <TextField disabled value="Disabled Input" />
     <h5>A Valid Input</h5>
