@@ -190,5 +190,4 @@ class InputDemo extends Component {
     );
   }
 }
-
 export default InputDemo;
