@@ -28,6 +28,8 @@ class InputDemo extends Component {
   handleSportsChange = (event) => {
     this.setState({
       sport: event.nativeEvent.target.value,
+      cricket: '',
+      football: '',
     });
   }
 
@@ -39,9 +41,38 @@ class InputDemo extends Component {
     });
   }
 
+  renderCricket = () => {
+    const { sport } = this.state;
+
+    if (sport !== Cricket) {
+      return null;
+    }
+
+    return (
+      <div>
+        <h4>What you do?</h4>
+        <RadioGroup value="male" options={cricketOptions} onchange={this.handlePositionChange} />
+      </div>
+    );
+  }
+
+  renderFootball = () => {
+    const { sport } = this.state;
+
+    if (sport !== Football) {
+      return null;
+    }
+
+    return (
+      <div>
+        <h4>What you do?</h4>
+        <RadioGroup value="male" options={footBallOptions} onchange={this.handlePositionChange} />
+      </div>
+    );
+  }
+
   render() {
     const { value, sport } = this.state;
-    const radio = (sport === Cricket) ? cricketOptions : footBallOptions;
     console.log(this.state);
     return (
       <>
@@ -49,14 +80,8 @@ class InputDemo extends Component {
         <TextField value={value} onchange={this.handleNameChange} />
         <h3>Select the game you play</h3>
         <SelectField value={sport} onchange={this.handleSportsChange} options={sportsArray} />
-        { sport
-          ? (
-            <div>
-              <h4>What you do?</h4>
-              <RadioGroup value="male" options={radio} onchange={this.handlePositionChange} />
-            </div>
-          )
-          : '' }
+        {this.renderFootball()}
+        {this.renderCricket()}
       </>
     );
   }
