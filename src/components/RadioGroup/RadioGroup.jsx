@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import style from './style';
 
 const RadioGroup = (props) => {
   const {
@@ -8,15 +9,17 @@ const RadioGroup = (props) => {
     error,
     ...rest
   } = props;
-
   return (
     <>
-      {options.map(option => (
-        <div key={`label${option.label}`}>
-          <input type="radio" name={options} {...rest} key={option.label} value={option.value} onChange={onchange} />
-          {option.value}
-        </div>
-      ))}
+      <div style={style.base}>
+        {options.map(option => (
+          <label htmlFor={option.value} key={`label${option.label}`} style={style.pointer}>
+            <input type="radio" name={options} id={option.value} {...rest} key={option.label} value={option.value} onChange={onchange} />
+            {option.value}
+          </label>
+        ))}
+      </div>
+      {(error) ? <p style={{ color: 'red' }}>{error}</p> : ''}
     </>
   );
 };

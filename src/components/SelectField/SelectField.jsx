@@ -22,7 +22,7 @@ const SelectField = (props) => {
           </option>
         ))}
       </select>
-      {(error) ? <info style={{ color: 'red' }}>{error}</info> : ''}
+      {(error) ? <p style={{ color: 'red' }}>{error}</p> : ''}
     </>
   );
 };
