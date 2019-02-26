@@ -156,36 +156,6 @@ class InputDemo extends Component {
     }, () => this.handleErrors());
   }
 
-  renderCricket = () => {
-    const { sport } = this.state;
-
-    if (sport !== Cricket) {
-      return null;
-    }
-
-    return (
-      <div>
-        <h4>What you do?</h4>
-        <RadioGroup value="male" options={cricketOptions} onchange={this.handlePositionChange} />
-      </div>
-    );
-  }
-
-  renderFootball = () => {
-    const { sport } = this.state;
-
-    if (sport !== Football) {
-      return null;
-    }
-
-    return (
-      <div>
-        <h4>What you do?</h4>
-        <RadioGroup value="male" options={footBallOptions} onchange={this.handlePositionChange} />
-      </div>
-    );
-  }
-
   render() {
     const {
       name,
@@ -220,5 +190,4 @@ class InputDemo extends Component {
     );
   }
 }
-
 export default InputDemo;
