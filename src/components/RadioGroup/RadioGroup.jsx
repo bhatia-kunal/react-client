@@ -5,7 +5,6 @@ import style from './style';
 const RadioGroup = (props) => {
   const {
     onchange,
-    value,
     options,
     error,
     ...rest
