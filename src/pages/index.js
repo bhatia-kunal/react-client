@@ -1,6 +1,6 @@
 export * from './TextFieldDemo';
 export { InputDemo } from './InputDemo';
-export { Children } from './ChildrenDemo';
-export { NavBar } from './components';
+export { ChildrenDemo } from './ChildrenDemo';
+export { NoMatch } from './NoMatch';
 export { Trainee } from './Trainee';
 export { Login } from './Login';

@@ -1,1 +1,1 @@
-export { default as Children } from './ChildrenDemo';
+export { default as ChildrenDemo } from './ChildrenDemo';
