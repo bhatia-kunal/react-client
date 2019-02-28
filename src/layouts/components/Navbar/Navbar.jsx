@@ -31,7 +31,7 @@ function NavBar(props) {
           <Typography style={{ textDecoration: 'none' }} component={Link} to="/" variant="h6" color="inherit" className={classes.grow}>
             Trainee Portal
           </Typography>
-          <Button component={Link} to="/" color="inherit" size="small">
+          <Button component={Link} to="/trainee" color="inherit" size="small">
               Trainee
           </Button>
           <Button component={Link} to="/text-field-demo" color="inherit" size="small">
