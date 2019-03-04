@@ -93,7 +93,6 @@ class TraineeList extends React.Component {
             {
               field: 'name',
               label: 'Name',
-              align: 'center',
             },
             {
               field: 'email',
