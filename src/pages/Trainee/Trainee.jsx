@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import AddDialog from './components/AddDialog/AddDialog';
+import { AddDialog } from './components';
 
 class Trainee extends React.Component {
   state = {
