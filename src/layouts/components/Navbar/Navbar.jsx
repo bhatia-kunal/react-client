@@ -54,11 +54,7 @@ function NavBar(props) {
 }
 
 NavBar.propTypes = {
-  classes: PropTypes.string,
-};
-
-NavBar.defaultProps = {
-  classes: '',
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default withStyles(styles)(NavBar);
