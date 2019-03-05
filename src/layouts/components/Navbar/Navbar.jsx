@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,20 +21,29 @@ const styles = {
   },
 };
 
+
 function NavBar(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
+          <Typography style={{ textDecoration: 'none' }} component={Link} to="/" variant="h6" color="inherit" className={classes.grow}>
             Trainee Portal
           </Typography>
-          <Button color="inherit" size="small">Trainee</Button>
-          <Button color="inherit" size="small">TextField Demo</Button>
-          <Button color="inherit" size="small">Input Demo</Button>
-          <Button color="inherit" size="small">Children Demo</Button>
-          <Button color="inherit" size="small">
+          <Button component={Link} to="/" color="inherit" size="small">
+              Trainee
+          </Button>
+          <Button component={Link} to="/text-field-demo" color="inherit" size="small">
+            TextField Demo
+          </Button>
+          <Button component={Link} to="input-demo" color="inherit" size="small">
+            Input Demo
+          </Button>
+          <Button component={Link} to="/children-demo" color="inherit" size="small">
+            Children Demo
+          </Button>
+          <Button component={Link} to="/login" color="inherit" size="small">
             <Person />
             Logout
           </Button>
