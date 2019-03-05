@@ -11,6 +11,7 @@ const App = () => (
       <NavBar />
       <Trainee />
       <Login />
+      <Trainee />
     </MuiThemeProvider>
   </>
 );
