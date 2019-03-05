@@ -14,7 +14,7 @@ const defaultProps = {
 
 const Math = (props) => {
   const calculate = (first, second, operator) => {
-    if (Number.isNaN(Number(first)) && Number.isNaN(Number(first))) return 'Error - Must provide a valid Number';
+    if (Number.isNaN(Number(first)) && Number.isNaN(Number(second))) return 'Error - Must provide a valid Number';
     if (operator === '+') return first + second;
     if (operator === '-') return first - second;
     if (operator === '/') return !second ? 'Infinity' : (first / second);
