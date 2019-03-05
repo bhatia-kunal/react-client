@@ -2,29 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
+import IconButton from '@material-ui/core/IconButton';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
-const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 700,
-  },
-  row: {
-    cursor: 'pointer',
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-});
+import styles from './style';
 
 const propTypes = {
   id: PropTypes.string.isRequired,
@@ -35,6 +21,11 @@ const propTypes = {
   order: PropTypes.string,
   onSort: PropTypes.func,
   onSelect: PropTypes.func,
+  count: PropTypes.number,
+  page: PropTypes.number,
+  rowsPerPage: PropTypes.number,
+  onChangePage: PropTypes.func,
+  actions: PropTypes.arrayOf,
 };
 
 const defaultProps = {
@@ -42,6 +33,11 @@ const defaultProps = {
   order: 'asc',
   onSort: null,
   onSelect: null,
+  count: 0,
+  page: 0,
+  rowsPerPage: 100,
+  onChangePage: null,
+  actions: null,
 };
 
 function SimpleTable(props) {
@@ -54,9 +50,37 @@ function SimpleTable(props) {
     order,
     onSort,
     onSelect,
+    count,
+    page,
+    rowsPerPage,
+    onChangePage,
+    actions,
   } = props;
 
-  console.log(orderBy, order, onSort, onSelect, props);
+  const renderActions = (row) => {
+    if (!actions) {
+      return null;
+    }
+
+    let key = 0;
+
+    return (
+      <TableCell>
+        {actions.map((action) => {
+          key += 1;
+          return (
+            <IconButton
+              key={key}
+              className={classes.button}
+              onClick={() => action.handler(row)}
+            >
+              {action.icon}
+            </IconButton>
+          );
+        })}
+      </TableCell>
+    );
+  };
 
   return (
     <Paper className={classes.root}>
@@ -76,23 +100,39 @@ function SimpleTable(props) {
                 </TableCell>
               )))
             }
+            {actions ? (<TableCell />) : ''}
           </TableRow>
         </TableHead>
-        <TableBody stripedRows>
+        <TableBody>
           {data.map(row => (
-            <TableRow className={classes.row} key={row[id]} hover onClick={() => onSelect(row)}>
+            <TableRow className={classes.row} key={row[id]} hover>
               {columns.map(cell => (
                 (
-                  <TableCell key={cell.field} align={cell.align}>
+                  <TableCell key={cell.field} align={cell.align} onClick={() => onSelect(row)}>
                     {(cell.format && cell.format(row[cell.field])) || row[cell.field]}
                   </TableCell>
                 )
               ))}
+              {renderActions(row)}
             </TableRow>
           ))
           }
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[]}
+        component="div"
+        count={count}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        backIconButtonProps={{
+          'aria-label': 'Previous Page',
+        }}
+        nextIconButtonProps={{
+          'aria-label': 'Next Page',
+        }}
+        onChangePage={onChangePage}
+      />
     </Paper>
   );
 }
