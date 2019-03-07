@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { PrivateRoute, AuthRoute } from './routes';
@@ -13,6 +14,15 @@ import {
   NoMatch,
 } from './pages';
 import theme from './theme';
+
+if (localStorage.jwtToken) {
+  const decoded = jwt_decode(localStorage.jwtToken);
+  console.log(decoded.expiry); // undefined
+  // const currentTime = Date.now() / 1000;
+  // if (decoded.exp < currentTime) {
+  //   window.location.href = '/login';
+  // }
+}
 
 const App = () => (
   <>

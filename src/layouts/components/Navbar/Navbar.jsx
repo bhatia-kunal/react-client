@@ -24,6 +24,12 @@ const styles = {
 
 function NavBar(props) {
   const { classes } = props;
+
+  const clearLocalStorage = () => {
+    localStorage.removeItem('jwtToken')
+  };
+  console.log('Token', localStorage.jwtToken);
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -43,7 +49,7 @@ function NavBar(props) {
           <Button component={Link} to="/children-demo" color="inherit" size="small">
             Children Demo
           </Button>
-          <Button component={Link} to="/login" color="inherit" size="small">
+          <Button component={Link} to="/login" onClick={clearLocalStorage} color="inherit" size="small">
             <Person />
             Logout
           </Button>
