@@ -56,7 +56,6 @@ function SimpleTable(props) {
     onChangePage,
     actions,
   } = props;
-
   const renderActions = (row) => {
     if (!actions) {
       return null;

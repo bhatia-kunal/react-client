@@ -7,6 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Person from '@material-ui/icons/Person';
 import Button from '@material-ui/core/Button';
+import { setAuthToken } from '../../../libs/utils';
 
 const styles = {
   root: {
@@ -26,7 +27,8 @@ function NavBar(props) {
   const { classes } = props;
 
   const clearLocalStorage = () => {
-    localStorage.removeItem('jwtToken')
+    localStorage.removeItem('jwtToken');
+    setAuthToken(false);
   };
   console.log('Token', localStorage.jwtToken);
 

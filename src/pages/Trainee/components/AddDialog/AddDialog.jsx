@@ -17,6 +17,7 @@ import Email from '@material-ui/icons/Email';
 import Person from '@material-ui/icons/Person';
 import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import TextField from '@material-ui/core/TextField';
+import { Spinner } from '../../../../components';
 import { SnackBarConsumer } from '../../../../contexts';
 
 const propTypes = {
@@ -68,6 +69,7 @@ class AddDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false,
       name: '',
       email: '',
       password: '',
@@ -141,6 +143,9 @@ class AddDialog extends Component {
   handleSubmit = (handleOpen) => {
     const { onSubmit } = this.props;
     const { name, email, password } = this.state;
+    this.setState({
+      isLoading: true,
+    });
     onSubmit({ name, email, password }, handleOpen);
     this.setState = ({
       name: '',
@@ -166,6 +171,7 @@ class AddDialog extends Component {
       confirmPassword,
       errors,
       touched,
+      isLoading,
     } = this.state;
     console.log(this.state);
     return (
@@ -330,10 +336,10 @@ class AddDialog extends Component {
                         color="primary"
                         className={classes.button}
                         size="small"
-                        disabled={this.hasError() || !this.isTouched()}
+                        disabled={isLoading || this.hasError() || !this.isTouched()}
                         onClick={() => this.handleSubmit(handleOpen)}
                       >
-                          Submit
+                          {isLoading ? (<Spinner />) : 'Submit'}
                       </Button>
                     </Grid>
                   </Grid>

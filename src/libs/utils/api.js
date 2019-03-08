@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseURL = 'https://express-training.herokuapp.com/api/user';
+const baseURL = 'https://express-training.herokuapp.com/api';
+const token = localStorage.getItem('jwtToken');
 
 const callApi = async (method, url, userData) => {
   try {
@@ -8,6 +9,9 @@ const callApi = async (method, url, userData) => {
       method,
       url: `${baseURL}${url}`,
       data: userData,
+      headers: {
+        'Authorization': token,
+      }
     });
   } catch (error) {
     return error.message;

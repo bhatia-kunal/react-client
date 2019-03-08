@@ -5,10 +5,11 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { AddDialog, RemoveDialog, EditDialog } from './components';
-import trainees from './data/trainee';
 import { Table } from '../../components';
 import { getDateFormatted } from '../../libs/utils';
 import { lastAcceptableDate } from '../../configs/constants';
+import { callApi } from '../../libs/utils';
+
 
 const style = {
   button: {
@@ -18,19 +19,42 @@ const style = {
   },
 };
 class TraineeList extends React.Component {
-  state = {
-    open: false,
-    openRemove: false,
-    openEdit: false,
-    deleteTrainee: {},
-    editTrainee: {},
-    name: '',
-    email: '',
-    password: '',
-    order: 'asc',
-    orderBy: '',
-    page: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      openRemove: false,
+      openEdit: false,
+      deleteTrainee: {},
+      editTrainee: {},
+      name: '',
+      email: '',
+      password: '',
+      order: 'asc',
+      orderBy: '',
+      page: 0,
+      traineeList: [],
+    }
+    console.log('Api called');
+    const result = callApi('get', '/trainee', {});
+    if (result.data) {
+      console.log('Result data', result);
+      this.setState({
+        traineeList: result.data.data,
+      });
+    }
+  }
+
+  componentDidMount = async () => {
+    const result = await callApi('get', '/trainee', {});
+    if(result.data) {
+      this.setState({
+        traineeList: result.data.data.records,
+      }, () => console.log(this.state.traineeList, typeof this.state.traineeList, typeof result.data.data.records));
+    } else {
+      console.log(result);
+    }
+  }
 
   handleClickOpen = () => {
     this.setState({
@@ -42,14 +66,22 @@ class TraineeList extends React.Component {
     this.setState({ [Dialog]: false, deleteTrainee: {}, editTrainee: {} });
   };
 
-  handleSubmit = (value, handleOpen) => {
+  handleSubmit = async (value, handleOpen) => {
     const { name, email, password } = value;
     this.setState({
-      open: false,
       name,
       email,
       password,
-    }, () => handleOpen('Trainee added successfully', 'success'));
+    });
+    const result = await callApi('post', '/trainee', {...value, role: 'trainee'});
+    this.setState({
+      open: false,
+    })
+    if(result.data) {
+      handleOpen('Successfully created', 'success');
+    } else {
+      handleOpen(result, 'error');
+    }
   };
 
   renderDialog = () => {
@@ -141,7 +173,7 @@ class TraineeList extends React.Component {
 
   handleOnSelect = (row) => {
     const { history } = this.props;
-    history.push(`/trainee/${row.id}`);
+    history.push(`/trainee/${row.originalId}`);
   }
 
   createSortHandler = property => event => this.handleRequestSort(event, property);
@@ -168,8 +200,10 @@ class TraineeList extends React.Component {
       orderBy,
       page,
       editTrainee,
+      traineeList,
     } = this.state;
-    console.log('Edit traineeeee', editTrainee);
+    console.log(this.state);
+    console.log('Edit traineeeee', editTrainee, traineeList);
     return (
       <div>
         <br />
@@ -177,8 +211,8 @@ class TraineeList extends React.Component {
           Add Trainee
         </Button>
         <Table
-          id="id"
-          data={trainees}
+          id="originalId"
+          data={traineeList}
           columns={[
             {
               field: 'name',

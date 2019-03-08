@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Spinner } from '../../components';
 import { SnackBarConsumer } from '../../contexts';
-import { callApi } from '../../libs/utils';
+import { callApi, setAuthToken } from '../../libs/utils';
 
 const styles = theme => ({
   main: {
@@ -68,6 +68,7 @@ class Login extends Component {
       password: '',
       errors: {},
       touched: {},
+      passwordType: 'password',
     };
   }
 
@@ -120,10 +121,11 @@ class Login extends Component {
     })
     const { history } = this.props;
     const { email, password } = this.state;
-    const result = await callApi('post', '/login', { email, password });
+    const result = await callApi('post', '/user/login', { email, password });
     if (result.data) {
       const { data } = result.data;
       localStorage.setItem('jwtToken', data);
+      setAuthToken(data);
       history.push('/trainee');
     } else {
       this.setState({
@@ -146,6 +148,19 @@ class Login extends Component {
     });
   }
 
+  togglePassword = () => {
+    const { passwordType } = this.state;
+    if (passwordType === 'password') {
+      this.setState({
+        passwordType: 'text',
+      });
+    } else {
+      this.setState({
+        passwordType: 'password',
+      });
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -154,6 +169,7 @@ class Login extends Component {
       password,
       errors,
       touched,
+      passwordType,
     } = this.state;
 
     return (
@@ -193,7 +209,7 @@ class Login extends Component {
                 required
                 id="outlined-error"
                 label="Password"
-                type="password"
+                type={passwordType}
                 className={classes.textField}
                 value={password}
                 onChange={this.handleOnChange('password')}
@@ -204,7 +220,7 @@ class Login extends Component {
                 fullWidth
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position="start" style={{cursor: 'pointer'}} onClick={this.togglePassword}>
                       <RemoveRedEye />
                     </InputAdornment>
                   ),
