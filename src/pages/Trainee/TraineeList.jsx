@@ -95,13 +95,13 @@ class TraineeList extends React.Component {
     const { deleteTrainee } = this.state;
     console.log('Deleted Trainee');
     console.log(deleteTrainee);
-    const { createdAt } = deleteTrainee;
+    const { createdAt, email } = deleteTrainee;
     this.setState({
       openRemove: false,
     }, () => {
       const date = getDateFormatted(lastAcceptableDate);
       if (createdAt < lastAcceptableDate) {
-        handleOpen(`Record created before ${date.slice(0, date.lastIndexOf(','))} can not be removed`, 'error');
+        handleOpen(`Record of ${email.toUpperCase()} is created before ${date.slice(0, date.lastIndexOf(','))} and hence  can not be removed`, 'error');
       } else {
         handleOpen('Trainee removed successfully', 'success');
       }
