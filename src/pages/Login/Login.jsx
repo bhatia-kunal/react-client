@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Spinner } from '../../components';
 import { SnackBarConsumer } from '../../contexts';
-import { callApi, setAuthToken } from '../../libs/utils';
+import { callApi } from '../../libs/utils';
 
 const styles = theme => ({
   main: {
@@ -58,7 +58,7 @@ class Login extends Component {
       .required().label('Password'),
   });
 
-  fieldTouched = {}
+  fieldTouched = {};
 
   constructor(props) {
     super(props);
@@ -125,7 +125,6 @@ class Login extends Component {
     if (result.data) {
       const { data } = result.data;
       localStorage.setItem('jwtToken', data);
-      setAuthToken(data);
       history.push('/trainee');
     } else {
       this.setState({
@@ -146,6 +145,7 @@ class Login extends Component {
     this.setState({
       touched: this.fieldTouched,
     });
+    console.log(this.fieldTouched);
   }
 
   togglePassword = () => {

@@ -11,6 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import styles from './style';
+import {withLoaderAndMessage} from '../../components';
 
 const propTypes = {
   id: PropTypes.string.isRequired,
@@ -40,7 +41,7 @@ const defaultProps = {
   actions: null,
 };
 
-function SimpleTable(props) {
+const  SimpleTable = (props) => {
   const {
     classes,
     columns,
@@ -56,6 +57,7 @@ function SimpleTable(props) {
     onChangePage,
     actions,
   } = props;
+
   const renderActions = (row) => {
     if (!actions) {
       return null;
@@ -139,4 +141,4 @@ function SimpleTable(props) {
 SimpleTable.propTypes = propTypes;
 SimpleTable.defaultProps = defaultProps;
 
-export default withStyles(styles)(SimpleTable);
+export default withStyles(styles)(withLoaderAndMessage(SimpleTable));

@@ -9,6 +9,7 @@ import { Table } from '../../components';
 import { getDateFormatted } from '../../libs/utils';
 import { lastAcceptableDate } from '../../configs/constants';
 import { callApi } from '../../libs/utils';
+import { SnackBarConsumer } from '../../contexts';
 
 
 const style = {
@@ -34,25 +35,36 @@ class TraineeList extends React.Component {
       orderBy: '',
       page: 0,
       traineeList: [],
-    }
-    console.log('Api called');
-    const result = callApi('get', '/trainee', {});
-    if (result.data) {
-      console.log('Result data', result);
-      this.setState({
-        traineeList: result.data.data,
-      });
+      apiResponseError: '',
+      loader: false,
+      dataLength: true,
     }
   }
 
-  componentDidMount = async () => {
-    const result = await callApi('get', '/trainee', {});
-    if(result.data) {
+
+  componentDidMount = () => {
+    this.getTraineesData();
+  }
+
+  getTraineesData = async () => {
+    const { page } = this.state;
+    await this.setState({
+      loader: true,
+    });
+    const skip = page * 10;
+    const result = await callApi('get', `/trainee?limit=10&skip=${skip}`, {});
+    if(result && result.data) {
+      const { records } = result.data.data;
       this.setState({
-        traineeList: result.data.data.records,
-      }, () => console.log(this.state.traineeList, typeof this.state.traineeList, typeof result.data.data.records));
+        traineeList: records,
+        loader: false,
+        dataLength: records.length,
+      });
     } else {
-      console.log(result);
+      await this.setState({
+        apiResponseError: result,
+        loader: false,
+      })
     }
   }
 
@@ -125,15 +137,14 @@ class TraineeList extends React.Component {
 
   handleRemoveSubmit = (handleOpen) => {
     const { deleteTrainee } = this.state;
-    console.log('Deleted Trainee');
-    console.log(deleteTrainee);
-    const { createdAt } = deleteTrainee;
+    console.log('Deleted Trainee', deleteTrainee);
+    const { createdAt, email } = deleteTrainee;
     this.setState({
       openRemove: false,
     }, () => {
       const date = getDateFormatted(lastAcceptableDate);
       if (createdAt < lastAcceptableDate) {
-        handleOpen(`Record created before ${date.slice(0, date.lastIndexOf(','))} can not be removed`, 'error');
+        handleOpen(`Record of ${email.toUpperCase()} is created before ${date.slice(0, date.lastIndexOf(','))} and hence  can not be removed`, 'error');
       } else {
         handleOpen('Trainee removed successfully', 'success');
       }
@@ -189,8 +200,9 @@ class TraineeList extends React.Component {
     this.setState({ order: currentOrder, orderBy: currentOrderBy });
   };
 
-  handleChangePage = (event, page) => {
-    this.setState({ page });
+  handleChangePage = async (event, page) => {
+    await this.setState({ page });
+    this.getTraineesData();
   };
 
 
@@ -201,58 +213,68 @@ class TraineeList extends React.Component {
       page,
       editTrainee,
       traineeList,
+      loader,
+      dataLength,
+      apiResponseError,
     } = this.state;
-    console.log(this.state);
-    console.log('Edit traineeeee', editTrainee, traineeList);
     return (
-      <div>
-        <br />
-        <Button variant="outlined" style={style.button} size="small" color="primary" onClick={this.handleClickOpen}>
-          Add Trainee
-        </Button>
-        <Table
-          id="originalId"
-          data={traineeList}
-          columns={[
-            {
-              field: 'name',
-              label: 'Name',
-            },
-            {
-              field: 'email',
-              label: 'Email Address',
-              format: value => value && value.toUpperCase(),
-            },
-            {
-              field: 'createdAt',
-              label: 'Date',
-              align: 'right',
-              format: getDateFormatted,
-            },
-          ]}
-          actions={[
-            {
-              icon: <EditIcon />,
-              handler: this.handleEditDialogOpen,
-            },
-            {
-              icon: <DeleteIcon />,
-              handler: this.handleRemoveDialogOpen,
-            },
-          ]}
-          order={order}
-          orderBy={orderBy}
-          onSelect={this.handleOnSelect}
-          onSort={this.createSortHandler}
-          count={100}
-          rowsPerPage={10}
-          page={page}
-          onChangePage={this.handleChangePage}
-        />
-        {this.renderDialog()}
-        {this.renderRemoveDialog()}
-        {this.renderEditDialog()}
-      </div>
+      <SnackBarConsumer>
+        {handleOpen => {
+          return (
+            <div>
+              <br />
+              <Button variant="outlined" style={style.button} size="small" color="primary" onClick={this.handleClickOpen}>
+                Add Trainee
+              </Button>
+              <Table
+                id="originalId"
+                data={traineeList}
+                columns={[
+                  {
+                    field: 'name',
+                    label: 'Name',
+                  },
+                  {
+                    field: 'email',
+                    label: 'Email Address',
+                    format: value => value && value.toUpperCase(),
+                  },
+                  {
+                    field: 'createdAt',
+                    label: 'Date',
+                    align: 'right',
+                    format: getDateFormatted,
+                  },
+                ]}
+                actions={[
+                  {
+                    icon: <EditIcon />,
+                    handler: this.handleEditDialogOpen,
+                  },
+                  {
+                    icon: <DeleteIcon />,
+                    handler: this.handleRemoveDialogOpen,
+                  },
+                ]}
+                order={order}
+                orderBy={orderBy}
+                onSelect={this.handleOnSelect}
+                onSort={this.createSortHandler}
+                count={100}
+                rowsPerPage={10}
+                page={page}
+                onChangePage={this.handleChangePage}
+                loader={loader}
+                dataLength={dataLength}
+                apiResponseError={apiResponseError}
+              />
+              {this.renderDialog()}
+              {this.renderRemoveDialog()}
+              {this.renderEditDialog()}
+            </div>
+          );
+        }}
+      </SnackBarConsumer>
     );
   }
 }
