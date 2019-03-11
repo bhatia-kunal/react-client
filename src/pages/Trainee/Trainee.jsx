@@ -15,7 +15,7 @@ const Trainee = (props) => {
 };
 
 Trainee.propTypes = {
-  match: PropTypes.objectOf(PropTypes.string).isRequired,
+  match: PropTypes.objectOf.isRequired,
 };
 
 export default Trainee;
