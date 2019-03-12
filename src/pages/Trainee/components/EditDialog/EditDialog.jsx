@@ -16,6 +16,7 @@ import Email from '@material-ui/icons/Email';
 import Person from '@material-ui/icons/Person';
 import TextField from '@material-ui/core/TextField';
 import { SnackBarConsumer } from '../../../../contexts';
+import { Spinner } from '../../../../components';
 
 const propTypes = {
   open: PropTypes.bool,
@@ -56,12 +57,16 @@ class EditDialog extends Component {
   constructor(props) {
     super(props);
     const { data } = this.props;
-    const { name, email } = data;
+    console.log('Edit props', data);
+    const { name, email, password, originalId: id } = data;
     this.state = {
       name,
       email,
+      password,
+      id,
       disabled: true,
       errors: {},
+      isLoading: false,
     };
   }
 
@@ -96,16 +101,18 @@ class EditDialog extends Component {
   }
 
   handleSubmit = (handleOpen) => {
+    this.setState({
+      isLoading: true,
+    }, () => console.log('Sttttttaaaaatttteeeee', this.state));
     const { onSubmit } = this.props;
-    const { name, email } = this.state;
+    const { name, email, password, id } = this.state;
     const data = {
       name,
       email,
+      password,
+      id,
     };
-    this.setState = ({
-      name: '',
-      email: '',
-    });
+    console.log('Update data', data, 'State', this.state);
     onSubmit(data, handleOpen);
   }
 
@@ -131,8 +138,10 @@ class EditDialog extends Component {
       email,
       disabled,
       errors,
+      isLoading,
     } = this.state;
 
+    console.log(this.state);
     return (
       <>
         <SnackBarConsumer>
@@ -194,8 +203,8 @@ class EditDialog extends Component {
                 <Button variant="contained" onClick={onClose} color="default">
                   Cancel
                 </Button>
-                <Button variant="contained" disabled={disabled} onClick={() => this.handleSubmit(handleOpen)} color="primary" autoFocus>
-                  Submit
+                <Button variant="contained" disabled={disabled || isLoading} onClick={() => this.handleSubmit(handleOpen)} color="primary" autoFocus>
+                  {isLoading ? <Spinner size={12} /> : 'Submit'}
                 </Button>
               </DialogActions>
             </Dialog>

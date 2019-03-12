@@ -60,6 +60,7 @@ class SnackBarProvider extends Component {
           }}
           open={open}
           autoHideDuration={4000}
+          onClose={this.handleClose}
         >
           <SnackbarContent
             className={classNames(classes[status])}

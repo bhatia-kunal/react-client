@@ -52,7 +52,7 @@ class TraineeList extends React.Component {
       loader: true,
     });
     const skip = page * 10;
-    const result = await callApi('get', `/trainee?limit=10&skip=${skip}`, {});
+    const result = await callApi('get', `/trainee/?limit=10&skip=${skip}`, {});
     if(result && result.data) {
       const { records } = result.data.data;
       this.setState({
@@ -61,11 +61,24 @@ class TraineeList extends React.Component {
         dataLength: records.length,
       });
     } else {
-      await this.setState({
+      this.setState({
         apiResponseError: result,
         loader: false,
       })
     }
+  }
+
+  renderAPIErrorSanck = (handleOpen) => {
+    const { apiResponseError } = this.state;
+
+    if(!apiResponseError) {
+      return null;
+    }
+
+    handleOpen(apiResponseError, 'error');
+    return (
+      <h1>Oops! No Response</h1>
+    )
   }
 
   handleClickOpen = () => {
@@ -113,7 +126,7 @@ class TraineeList extends React.Component {
   }
 
   renderRemoveDialog = () => {
-    const { openRemove } = this.state;
+    const { openRemove, deleteTrainee } = this.state;
 
     if (!openRemove) {
       return null;
@@ -122,6 +135,7 @@ class TraineeList extends React.Component {
     return (
       <RemoveDialog
         open={openRemove}
+        trainee={deleteTrainee}
         onClose={this.handleClose('openRemove')}
         onSubmit={this.handleRemoveSubmit}
       />
@@ -135,20 +149,31 @@ class TraineeList extends React.Component {
     });
   }
 
-  handleRemoveSubmit = (handleOpen) => {
-    const { deleteTrainee } = this.state;
-    console.log('Deleted Trainee', deleteTrainee);
-    const { createdAt, email } = deleteTrainee;
+  handleRemoveSubmit = async (handleOpen) => {
+    const { deleteTrainee, page } = this.state;
+    const { createdAt, email, originalId } = deleteTrainee;
+    const result = await callApi('delete', `/trainee/${originalId}`, {});
     this.setState({
       openRemove: false,
-    }, () => {
+    });
+    if(result && result.data) {
       const date = getDateFormatted(lastAcceptableDate);
       if (createdAt < lastAcceptableDate) {
-        handleOpen(`Record of ${email.toUpperCase()} is created before ${date.slice(0, date.lastIndexOf(','))} and hence  can not be removed`, 'error');
+          handleOpen(`Record of ${email.toUpperCase()} is created before ${date.slice(0, date.lastIndexOf(','))} and hence  can not be removed`, 'error');
       } else {
-        handleOpen('Trainee removed successfully', 'success');
+        handleOpen(`Record of ${email} with originalId - ${originalId} removed successfully`, 'success');
+        await this.getTraineesData();
+        const { dataLength } = this.state;
+        if (!dataLength) {
+        this.setState({
+            loader: true,
+            page: page-1,
+        }, () => this.getTraineesData());
+        }
       }
-    });
+    } else {
+      handleOpen(result, 'error');
+    }
   }
 
   renderEditDialog = () => {
@@ -175,11 +200,20 @@ class TraineeList extends React.Component {
     });
   }
 
-  handleEditSubmit = (newData, handleOpen) => {
+  handleEditSubmit = async (dataToUpdate, handleOpen) => {
+    console.log('New dataatataat', dataToUpdate);
+    const result = await callApi('put', '/trainee', dataToUpdate);
     this.setState({
       openEdit: false,
-      editTrainee: newData,
-    }, () => handleOpen('Trainee updated successfully', 'success'));
+    });
+    if(result && result.data) {
+      console.log(result);
+      handleOpen('Successfull', 'success');
+      await this.getTraineesData();
+    } else {
+      console.log(result);
+      handleOpen(result, 'error');
+    }
   }
 
   handleOnSelect = (row) => {
@@ -205,75 +239,79 @@ class TraineeList extends React.Component {
     this.getTraineesData();
   };
 
-
-  render() {
+  renderTable = () => {
     const {
       order,
       orderBy,
       page,
-      editTrainee,
       traineeList,
       loader,
       dataLength,
-      apiResponseError,
     } = this.state;
+
     return (
+      <Table
+        id="originalId"
+        data={traineeList}
+        columns={[
+          {
+            field: 'name',
+            label: 'Name',
+          },
+          {
+            field: 'email',
+            label: 'Email Address',
+            format: value => value && value.toUpperCase(),
+          },
+          {
+            field: 'createdAt',
+            label: 'Date',
+            align: 'right',
+            format: getDateFormatted,
+          },
+        ]}
+        actions={[
+          {
+            icon: <EditIcon />,
+            handler: this.handleEditDialogOpen,
+          },
+          {
+            icon: <DeleteIcon />,
+            handler: this.handleRemoveDialogOpen,
+          },
+        ]}
+        order={order}
+        orderBy={orderBy}
+        onSelect={this.handleOnSelect}
+        onSort={this.createSortHandler}
+        count={100}
+        rowsPerPage={10}
+        page={page}
+        onChangePage={this.handleChangePage}
+        loader={loader}
+        dataLength={dataLength}
+      />
+    )
+  }
+
+
+  render() {
+    const { apiResponseError } = this.state;
+    return (
+
       <SnackBarConsumer>
-        {handleOpen => {
-          return (
+        {handleOpen => (
             <div>
               <br />
               <Button variant="outlined" style={style.button} size="small" color="primary" onClick={this.handleClickOpen}>
                 Add Trainee
               </Button>
-              <Table
-                id="originalId"
-                data={traineeList}
-                columns={[
-                  {
-                    field: 'name',
-                    label: 'Name',
-                  },
-                  {
-                    field: 'email',
-                    label: 'Email Address',
-                    format: value => value && value.toUpperCase(),
-                  },
-                  {
-                    field: 'createdAt',
-                    label: 'Date',
-                    align: 'right',
-                    format: getDateFormatted,
-                  },
-                ]}
-                actions={[
-                  {
-                    icon: <EditIcon />,
-                    handler: this.handleEditDialogOpen,
-                  },
-                  {
-                    icon: <DeleteIcon />,
-                    handler: this.handleRemoveDialogOpen,
-                  },
-                ]}
-                order={order}
-                orderBy={orderBy}
-                onSelect={this.handleOnSelect}
-                onSort={this.createSortHandler}
-                count={100}
-                rowsPerPage={10}
-                page={page}
-                onChangePage={this.handleChangePage}
-                loader={loader}
-                dataLength={dataLength}
-                apiResponseError={apiResponseError}
-              />
+              {apiResponseError ? (this.renderAPIErrorSanck(handleOpen)) : (this.renderTable())}
               {this.renderDialog()}
               {this.renderRemoveDialog()}
               {this.renderEditDialog()}
             </div>
-          );
-        }}
+        )}
       </SnackBarConsumer>
     );
   }

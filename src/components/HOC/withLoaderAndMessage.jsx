@@ -1,23 +1,10 @@
 import React from 'react'
 import { Spinner } from '../../components';
 import style from './style';
-import { SnackBarConsumer } from '../../contexts';
 
 const withLoaderAndMessage = (WrappedComponent) => {
   const HOC = (props) => {
     const { loader, dataLength, apiResponseError, ...rest } = props;
-
-    const renderErrorSnackBar = (handleOpen) => {
-      if (!apiResponseError) {
-        return null;
-      }
-      handleOpen(apiResponseError, 'error');
-      return (
-        <div style={style.text}>
-          <h1>Oops! No Response</h1>
-        </div>
-      )
-    }
 
     const renderLoader = () => {
       if (!loader) {
@@ -48,16 +35,11 @@ const withLoaderAndMessage = (WrappedComponent) => {
     }
 
     return (
-      <SnackBarConsumer>
-        {handleOpen => (
-          <>
-            {renderLoader()}
-            {renderMessage()}
-            {renderErrorSnackBar(handleOpen)}
-            {renderWrappedComponent()}
-          </>
-        )}
-      </SnackBarConsumer>
+      <>
+        {renderLoader()}
+        {renderMessage()}
+        {renderWrappedComponent()}
+      </>
     );
   }
 
