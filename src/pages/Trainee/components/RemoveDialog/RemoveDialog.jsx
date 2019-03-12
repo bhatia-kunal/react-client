@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import { SnackBarConsumer } from '../../../../contexts';
 
 const propTypes = {
   open: PropTypes.bool,
@@ -43,29 +44,32 @@ const RemoveDialog = (props) => {
 
   return (
     <>
-      <Dialog
-        aria-labelledby="simple-dialog-title"
-        {...other}
-        fullWidth
-        maxWidth="md"
-        onClose={onClose}
-      >
-        <DialogTitle id="alert-dialog-title">Remove Trainee</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do you really want to remove this trainee?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={onClose} color="default">
-            Cancel
-          </Button>
-          <Button variant="contained" onClick={onSubmit} color="primary" autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-
-      </Dialog>
+      <SnackBarConsumer>
+        {handleOpen => (
+          <Dialog
+            aria-labelledby="simple-dialog-title"
+            {...other}
+            fullWidth
+            maxWidth="md"
+            onClose={onClose}
+          >
+            <DialogTitle id="alert-dialog-title">Remove Trainee</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Do you really want to remove this trainee?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={onClose} color="default">
+                Cancel
+              </Button>
+              <Button variant="contained" onClick={() => onSubmit(handleOpen)} color="primary" autoFocus>
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
+      </SnackBarConsumer>
     </>
   );
 };

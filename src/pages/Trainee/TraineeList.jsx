@@ -8,6 +8,7 @@ import { AddDialog, RemoveDialog, EditDialog } from './components';
 import trainees from './data/trainee';
 import { Table } from '../../components';
 import { getDateFormatted } from '../../libs/utils';
+import { lastAcceptableDate } from '../../configs/constants';
 
 const style = {
   button: {
@@ -41,14 +42,14 @@ class TraineeList extends React.Component {
     this.setState({ [Dialog]: false, deleteTrainee: {}, editTrainee: {} });
   };
 
-  handleSubmit = (value) => {
+  handleSubmit = (value, handleOpen) => {
     const { name, email, password } = value;
     this.setState({
       open: false,
       name,
       email,
       password,
-    });
+    }, () => handleOpen('Trainee added successfully', 'success'));
   };
 
   renderDialog = () => {
@@ -90,23 +91,31 @@ class TraineeList extends React.Component {
     });
   }
 
-  handleRemoveSubmit = () => {
+  handleRemoveSubmit = (handleOpen) => {
     const { deleteTrainee } = this.state;
     console.log('Deleted Trainee');
     console.log(deleteTrainee);
+    const { createdAt, email } = deleteTrainee;
     this.setState({
       openRemove: false,
+    }, () => {
+      const date = getDateFormatted(lastAcceptableDate);
+      if (createdAt < lastAcceptableDate) {
+        handleOpen(`Record of ${email.toUpperCase()} is created before ${date.slice(0, date.lastIndexOf(','))} and hence  can not be removed`, 'error');
+      } else {
+        handleOpen('Trainee removed successfully', 'success');
+      }
     });
   }
 
   renderEditDialog = () => {
     const { openEdit, editTrainee } = this.state;
-
     if (!openEdit) {
       return null;
     }
 
     return (
+
       <EditDialog
         open={openEdit}
         data={editTrainee}
@@ -123,11 +132,11 @@ class TraineeList extends React.Component {
     });
   }
 
-  handleEditSubmit = (newData) => {
+  handleEditSubmit = (newData, handleOpen) => {
     this.setState({
       openEdit: false,
       editTrainee: newData,
-    });
+    }, () => handleOpen('Trainee updated successfully', 'success'));
   }
 
   handleOnSelect = (row) => {

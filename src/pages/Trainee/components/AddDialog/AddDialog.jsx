@@ -17,6 +17,7 @@ import Email from '@material-ui/icons/Email';
 import Person from '@material-ui/icons/Person';
 import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import TextField from '@material-ui/core/TextField';
+import { SnackBarConsumer } from '../../../../contexts';
 
 const propTypes = {
   open: PropTypes.bool,
@@ -137,10 +138,10 @@ class AddDialog extends Component {
     });
   }
 
-  handleSubmit = () => {
+  handleSubmit = (handleOpen) => {
     const { onSubmit } = this.props;
     const { name, email, password } = this.state;
-    onSubmit({ name, email, password });
+    onSubmit({ name, email, password }, handleOpen);
     this.setState = ({
       name: '',
       email: '',
@@ -169,175 +170,179 @@ class AddDialog extends Component {
     console.log(this.state);
     return (
       <>
-        <Dialog
-          aria-labelledby="simple-dialog-title"
-          {...other}
-          fullWidth
-          maxWidth="md"
-        >
-          <DialogTitle id="simple-dialog-title">Add Trainee</DialogTitle>
-          <DialogContent>
-            <DialogContentText>Enter your Trainee details</DialogContentText>
-            <List>
-              <ListItem>
-                <TextField
-                  error={!!touched.name && !!errors.name}
-                  required
-                  id="outlined-error"
-                  label="Name"
-                  className={classes.textField}
-                  value={name}
-                  onChange={this.handleOnChange('name')}
-                  onBlur={this.handleBlur('name')}
-                  helperText={errors.name ? this.getError('name') : ''}
-                  margin="dense"
-                  variant="outlined"
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Person />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </ListItem>
-              <ListItem>
-                <TextField
-                  error={!!touched.email && !!errors.email}
-                  required
-                  id="outlined-error"
-                  label="Email"
-                  className={classes.textField}
-                  value={email}
-                  onChange={this.handleOnChange('email')}
-                  onBlur={this.handleBlur('email')}
-                  helperText={errors.email ? this.getError('email') : ''}
-                  margin="dense"
-                  variant="outlined"
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Email />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </ListItem>
-              <ListItem>
-                <Grid
-                  item
-                  md={12}
-                  container
-                  direction="row"
-                  alignItems="flex-start"
-                  spacing="18"
-                >
+      <SnackBarConsumer>
+        {handleOpen => (
+          <Dialog
+            aria-labelledby="simple-dialog-title"
+            {...other}
+            fullWidth
+            maxWidth="md"
+          >
+            <DialogTitle id="simple-dialog-title">Add Trainee</DialogTitle>
+            <DialogContent>
+              <DialogContentText>Enter your Trainee details</DialogContentText>
+              <List>
+                <ListItem>
+                  <TextField
+                    error={!!touched.name && !!errors.name}
+                    required
+                    id="outlined-error"
+                    label="Name"
+                    className={classes.textField}
+                    value={name}
+                    onChange={this.handleOnChange('name')}
+                    onBlur={this.handleBlur('name')}
+                    helperText={errors.name ? this.getError('name') : ''}
+                    margin="dense"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Person />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </ListItem>
+                <ListItem>
+                  <TextField
+                    error={!!touched.email && !!errors.email}
+                    required
+                    id="outlined-error"
+                    label="Email"
+                    className={classes.textField}
+                    value={email}
+                    onChange={this.handleOnChange('email')}
+                    onBlur={this.handleBlur('email')}
+                    helperText={errors.email ? this.getError('email') : ''}
+                    margin="dense"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Email />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </ListItem>
+                <ListItem>
                   <Grid
                     item
-                    xs={6}
+                    md={12}
                     container
                     direction="row"
-                    justify="space-between"
-                    alignItems="center"
+                    alignItems="flex-start"
+                    spacing="18"
                   >
-                    <TextField
-                      error={!!touched.password && !!errors.password}
-                      required
-                      id="outlined-error"
-                      label="Password"
-                      type="password"
-                      className={classes.textField}
-                      value={password}
-                      onChange={this.handleOnChange('password')}
-                      onBlur={this.handleBlur('password')}
-                      helperText={errors.password ? this.getError('password') : ''}
-                      margin="dense"
-                      variant="outlined"
-                      fullWidth
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <RemoveRedEye />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
+                    <Grid
+                      item
+                      xs={6}
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                    >
+                      <TextField
+                        error={!!touched.password && !!errors.password}
+                        required
+                        id="outlined-error"
+                        label="Password"
+                        type="password"
+                        className={classes.textField}
+                        value={password}
+                        onChange={this.handleOnChange('password')}
+                        onBlur={this.handleBlur('password')}
+                        helperText={errors.password ? this.getError('password') : ''}
+                        margin="dense"
+                        variant="outlined"
+                        fullWidth
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <RemoveRedEye />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={6}
+                      container
+                      direction="row"
+                      justify="space-between"
+                      alignItems="center"
+                    >
+                      <TextField
+                        error={!!touched.confirmPassword && !!errors.confirmPassword}
+                        required
+                        id="outlined-error"
+                        label="Confirm Password"
+                        type="password"
+                        className={classes.textField}
+                        value={confirmPassword}
+                        onChange={this.handleOnChange('confirmPassword')}
+                        onBlur={this.handleBlur('confirmPassword')}
+                        helperText={this.getError('confirmPassword') || ''}
+                        margin="dense"
+                        variant="outlined"
+                        fullWidth
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <RemoveRedEye />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
                   </Grid>
+                </ListItem>
+                <ListItem>
                   <Grid
-                    item
-                    xs={6}
                     container
-                    direction="row"
-                    justify="space-between"
+                    spacing={16}
+                    className={classes.demo}
                     alignItems="center"
+                    direction="row"
+                    justify="flex-end"
                   >
-                    <TextField
-                      error={!!touched.confirmPassword && !!errors.confirmPassword}
-                      required
-                      id="outlined-error"
-                      label="Confirm Password"
-                      type="password"
-                      className={classes.textField}
-                      value={confirmPassword}
-                      onChange={this.handleOnChange('confirmPassword')}
-                      onBlur={this.handleBlur('confirmPassword')}
-                      helperText={this.getError('confirmPassword') || ''}
-                      margin="dense"
-                      variant="outlined"
-                      fullWidth
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <RemoveRedEye />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              </ListItem>
-              <ListItem>
-                <Grid
-                  container
-                  spacing={16}
-                  className={classes.demo}
-                  alignItems="center"
-                  direction="row"
-                  justify="flex-end"
-                >
-                  <Grid
-                    item
-                  >
-                    <Button
-                      variant="contained"
-                      size="small"
-                      className={classes.button}
-                      onClick={onClose}
+                    <Grid
+                      item
                     >
-                        Cancel
-                    </Button>
-                  </Grid>
-                  <Grid
-                    item
-                  >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      size="small"
-                      disabled={this.hasError() || !this.isTouched()}
-                      onClick={this.handleSubmit}
+                      <Button
+                        variant="contained"
+                        size="small"
+                        className={classes.button}
+                        onClick={onClose}
+                      >
+                          Cancel
+                      </Button>
+                    </Grid>
+                    <Grid
+                      item
                     >
-                        Submit
-                    </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        size="small"
+                        disabled={this.hasError() || !this.isTouched()}
+                        onClick={() => this.handleSubmit(handleOpen)}
+                      >
+                          Submit
+                      </Button>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </ListItem>
-            </List>
-          </DialogContent>
-        </Dialog>
+                </ListItem>
+              </List>
+            </DialogContent>
+          </Dialog>
+        )}
+      </SnackBarConsumer>
       </>
     );
   }

@@ -43,3 +43,4 @@ export const footBallOptions = [
 
 export const Football = 'Football';
 export const Cricket = 'Cricket';
+export const lastAcceptableDate = '2019-02-14T18:15:11.778Z';
