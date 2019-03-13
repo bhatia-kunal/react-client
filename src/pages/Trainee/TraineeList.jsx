@@ -201,17 +201,14 @@ class TraineeList extends React.Component {
   }
 
   handleEditSubmit = async (dataToUpdate, handleOpen) => {
-    console.log('New dataatataat', dataToUpdate);
     const result = await callApi('put', '/trainee', dataToUpdate);
     this.setState({
       openEdit: false,
     });
     if(result && result.data) {
-      console.log(result);
-      handleOpen('Successfull', 'success');
+      handleOpen('Updated successfully', 'success');
       await this.getTraineesData();
     } else {
-      console.log(result);
       handleOpen(result, 'error');
     }
   }

@@ -100,6 +100,11 @@ class EditDialog extends Component {
     return errors[Field];
   }
 
+  hasError = () => {
+    const { errors } = this.state;
+    return !!Object.keys(errors).length;
+  }
+
   handleSubmit = (handleOpen) => {
     this.setState({
       isLoading: true,
@@ -203,7 +208,7 @@ class EditDialog extends Component {
                 <Button variant="contained" onClick={onClose} color="default">
                   Cancel
                 </Button>
-                <Button variant="contained" disabled={disabled || isLoading} onClick={() => this.handleSubmit(handleOpen)} color="primary" autoFocus>
+                <Button variant="contained" disabled={disabled || isLoading || this.hasError()} onClick={() => this.handleSubmit(handleOpen)} color="primary" autoFocus>
                   {isLoading ? <Spinner size={12} /> : 'Submit'}
                 </Button>
               </DialogActions>
