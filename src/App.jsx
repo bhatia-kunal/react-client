@@ -12,17 +12,18 @@ import {
   InputDemo,
   TextFieldDemo,
   NoMatch,
+  Home,
 } from './pages';
 import theme from './theme';
 
-if (localStorage.jwtToken) {
-  const decoded = jwt_decode(localStorage.jwtToken);
-  console.log(decoded.expiry); // undefined
-  // const currentTime = Date.now() / 1000;
-  // if (decoded.exp < currentTime) {
-  //   window.location.href = '/login';
-  // }
-}
+// if (localStorage.jwtToken) {
+//   const decoded = jwt_decode(localStorage.jwtToken);
+//   console.log(decoded.expiry); // undefined
+//   // const currentTime = Date.now() / 1000;
+//   // if (decoded.exp < currentTime) {
+//   //   window.location.href = '/login';
+//   // }
+// }
 
 const App = () => (
   <>
@@ -31,6 +32,7 @@ const App = () => (
       <MuiThemeProvider theme={theme}>
         <Router>
           <Switch>
+            <PrivateRoute path="/" component={Home} />
             <PrivateRoute path="/trainee" component={Trainee} />
             <AuthRoute path="/login" component={Login} />
             <PrivateRoute path="/children-demo" component={ChildrenDemo} />
