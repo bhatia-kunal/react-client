@@ -34,6 +34,7 @@ class TraineeList extends React.Component {
       order: 'asc',
       orderBy: '',
       page: 0,
+      count: 0,
       traineeList: [],
       apiResponseError: '',
       loader: false,
@@ -54,8 +55,9 @@ class TraineeList extends React.Component {
     const skip = page * 10;
     const result = await callApi('get', `/trainee/?limit=10&skip=${skip}`, {});
     if(result && result.data) {
-      const { records } = result.data.data;
+      const { records, count } = result.data.data;
       this.setState({
+        count,
         traineeList: records,
         loader: false,
         dataLength: records.length,
@@ -244,6 +246,7 @@ class TraineeList extends React.Component {
       traineeList,
       loader,
       dataLength,
+      count,
     } = this.state;
 
     return (
@@ -281,7 +284,7 @@ class TraineeList extends React.Component {
         orderBy={orderBy}
         onSelect={this.handleOnSelect}
         onSort={this.createSortHandler}
-        count={100}
+        count={count}
         rowsPerPage={10}
         page={page}
         onChangePage={this.handleChangePage}
